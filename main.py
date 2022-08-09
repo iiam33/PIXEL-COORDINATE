@@ -1,6 +1,6 @@
 import os
 from urllib import response
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, redirect, url_for
 from werkzeug.utils import secure_filename
 from PIL import Image
 import requests
@@ -39,13 +39,19 @@ def upload_file():
       uploaded_file = request.files['file']
       file_name = secure_filename(uploaded_file.filename)
       uploaded_file.save(secure_filename(uploaded_file.filename))
-      uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
+      # uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
       processed_img = convert_file(file_name)
       # file_path = get_file(processed_img)
       # response = file_path
       response = jsonify({'file-path': processed_img, 'message' : 'File successfully uploaded', 'status': 201})
       response.status_code = 201
-      return response
-		
+      return redirect(url_for('image', file = processed_img))
+   return response
+
+@app.route('/image', methods = ['GET'])
+def image():
+   file = request.args.get('file')
+   return render_template("image.html", image = file)
+   
 if __name__ == '__main__':
    app.run(debug=True, host='0.0.0.0', port=5000)
