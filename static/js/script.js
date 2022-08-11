@@ -1,5 +1,5 @@
 function uploadFile() {
-    document.getElementById('upload').click(); //redirect user to the file upload page   
+    document.getElementById('upload').click(); //redirect user to the file upload page  
 }
 
 function drag(){
